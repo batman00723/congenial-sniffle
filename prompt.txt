@@ -1,0 +1,1203 @@
+# MASTER PROMPT — CINEMATIC AI SYSTEMS ENGINEER PORTFOLIO
+
+## ROLE
+
+You are an elite product designer, creative director, frontend architect, motion designer, branding expert, UX engineer, and award-winning web developer.
+
+Your mission is **not** to build a portfolio website.
+
+Your mission is to create a **world-class interactive experience** that feels like watching an Apple keynote, browsing a Vercel launch page, and reading a beautifully engineered technical documentary.
+
+The final result should make visitors think:
+
+> "This engineer architects production AI systems, thinks like a founder, and obsesses over engineering quality."
+
+This should not resemble a student portfolio.
+
+Every project should feel like a premium software product launch.
+
+---
+
+# PRIMARY BRAND
+
+**Name**
+
+Aman Mishra
+
+**Title**
+
+AI Systems Engineer
+
+**Mission**
+
+Engineering Autonomous Intelligence for the Real World.
+
+---
+
+# BRAND PERSONALITY
+
+The experience should communicate:
+
+* Quiet confidence
+* Founder mindset
+* Systems thinking
+* Engineering discipline
+* Production-first mentality
+* Technical depth
+* Precision
+* Craftsmanship
+* Long-term thinking
+
+Avoid:
+
+* Looking like a college portfolio
+* Startup buzzword overload
+* Flashy "AI" aesthetics
+* Gamer themes
+* Crypto vibes
+* Matrix effects
+* Cyberpunk
+
+The visitor should feel:
+
+> "I trust this engineer with production systems."
+
+---
+
+# DESIGN PHILOSOPHY
+
+Primary inspirations:
+
+* Apple
+* Linear
+* Vercel
+* Stripe
+* Arc Browser
+* Notion
+* Raycast
+* Figma
+
+Design principles:
+
+* Large whitespace
+* Elegant typography
+* Minimal UI
+* Thin borders
+* Soft shadows
+* Consistent spacing
+* Clear hierarchy
+* Calm interface
+* Premium interactions
+
+Every animation must have purpose.
+
+Never animate for decoration.
+
+---
+
+# VISUAL SYSTEM
+
+Theme:
+
+Light mode only by default.
+
+Dark mode exists only as a hidden easter egg.
+
+Colors:
+
+Background:
+Pure white
+
+Primary:
+Black
+
+Secondary:
+Neutral gray
+
+Accent:
+Soft Lavender
+
+HEX:
+
+#8B7CFF
+
+Never use:
+
+* Neon
+* RGB
+* Heavy gradients
+* Glassmorphism
+* Overly saturated colors
+
+Border Radius:
+
+12
+16
+20
+28
+
+Spacing:
+
+Strict 8-point grid.
+
+Container Width:
+
+1200px
+
+Maximum Width:
+
+1440px
+
+Reading Width:
+
+700px
+
+Border:
+
+1px subtle gray.
+
+Shadows:
+
+Very soft.
+
+Professional.
+
+---
+
+# TYPOGRAPHY
+
+Huge headlines.
+
+Minimal body text.
+
+Perfect hierarchy.
+
+Rules:
+
+Headline:
+4–8 words maximum
+
+Paragraph:
+Maximum two lines before breaking
+
+Avoid unnecessary adjectives.
+
+Use metrics instead of marketing language.
+
+No fluff.
+
+---
+
+# TECH STACK
+
+Framework
+
+Next.js (App Router)
+
+Language
+
+TypeScript
+
+Styling
+
+TailwindCSS
+
+Components
+
+shadcn/ui
+
+Animation
+
+Framer Motion
+
+GSAP
+
+ScrollTrigger
+
+Scrolling
+
+Lenis
+
+3D
+
+React Three Fiber
+
+@react-three/drei
+
+Icons
+
+Lucide Icons
+
+Deployment
+
+Vercel
+
+Target Lighthouse:
+
+95+
+
+Accessibility:
+
+95+
+
+SEO:
+
+95+
+
+Best Practices:
+
+95+
+
+---
+
+# CODE QUALITY
+
+Generate production-quality code.
+
+Folder structure:
+
+app/
+
+components/
+
+animations/
+
+hooks/
+
+content/
+
+three/
+
+lib/
+
+types/
+
+styles/
+
+No duplicated code.
+
+Reusable components only.
+
+Strict TypeScript.
+
+Server Components whenever possible.
+
+Client Components only when interaction requires them.
+
+No inline styles.
+
+No magic numbers.
+
+Comment complex animations.
+
+Organize every animation into reusable hooks.
+
+---
+
+# CONTENT ARCHITECTURE
+
+All portfolio content must come from structured JSON or Markdown files.
+
+Example:
+
+content/
+
+projects.json
+
+timeline.json
+
+principles.json
+
+buildlog.json
+
+about.json
+
+socials.json
+
+The website should automatically render from data.
+
+Adding future projects should require editing JSON only.
+
+---
+
+# WEBSITE STRUCTURE
+
+Loading Experience
+
+↓
+
+Portrait Introduction
+
+↓
+
+Hero
+
+↓
+
+Systems
+
+↓
+
+Architecture Explorer
+
+↓
+
+Engineering Principles
+
+↓
+
+Build Log
+
+↓
+
+Timeline
+
+↓
+
+About
+
+↓
+
+Contact
+
+↓
+
+Final Chapter
+
+Every section should feel like a new chapter.
+
+Never like a scrolling webpage.
+
+---
+
+# LOADING EXPERIENCE
+
+Show sequence:
+
+Initializing…
+
+↓
+
+Loading Systems…
+
+↓
+
+Compiling Workflows…
+
+↓
+
+Rendering Architecture…
+
+↓
+
+Ready.
+
+Fade into the portrait.
+
+---
+
+# OPENING EXPERIENCE
+
+The first screen contains ONLY the uploaded portrait.
+
+No navbar.
+
+No text.
+
+No buttons.
+
+No dock.
+
+Portrait:
+
+Black & White
+
+Centered
+
+Occupies roughly 80% viewport
+
+Very subtle breathing animation.
+
+---
+
+# HERO TRANSITION
+
+On first scroll:
+
+Pin portrait
+
+↓
+
+Scale portrait down
+
+↓
+
+Move portrait to right side
+
+↓
+
+Round corners
+
+↓
+
+Soft shadow appears
+
+↓
+
+Hero title fades in
+
+↓
+
+Subtitle fades in
+
+↓
+
+CTA fades in
+
+↓
+
+Floating dock appears
+
+Entire transition spans approximately one viewport.
+
+Smooth.
+
+Elegant.
+
+---
+
+# NAVIGATION
+
+Floating macOS-inspired Dock.
+
+Items:
+
+Home
+
+Systems
+
+Architecture
+
+Build Log
+
+Timeline
+
+About
+
+Contact
+
+Magnetic hover.
+
+Dock slightly enlarges on hover.
+
+Always minimal.
+
+---
+
+# HERO
+
+Headline:
+
+Engineering Autonomous Intelligence for the Real World.
+
+Supporting Copy:
+
+Building production AI systems using agentic workflows, retrieval-augmented generation, orchestration, persistent memory, backend engineering, and production infrastructure.
+
+Buttons:
+
+Explore Systems
+
+GitHub
+
+Contact
+
+---
+
+# SYSTEMS SECTION
+
+Never call them "Projects."
+
+Call them:
+
+Systems
+
+Systems:
+
+1. AI Receptionist
+
+2. Geopolitical Newsletter Agent
+
+3. Meeting Intelligence Platform
+
+Each should feel like a premium product launch.
+
+---
+
+# CASE STUDY STRUCTURE
+
+Every system includes:
+
+Hero
+
+Problem
+
+Context
+
+Solution
+
+Interactive Architecture
+
+Engineering Decisions
+
+State Management
+
+Data Flow
+
+Challenges
+
+Debugging Stories
+
+Performance Optimizations
+
+Metrics
+
+Technology Stack
+
+Lessons Learned
+
+Future Roadmap
+
+Never use long paragraphs.
+
+Mix visuals and storytelling.
+
+---
+
+# INTERACTIVE ARCHITECTURE
+
+Never display static architecture diagrams.
+
+Instead create an interactive architecture explorer.
+
+Every node:
+
+Hover
+
+↓
+
+Tooltip explains purpose.
+
+Click
+
+↓
+
+Technical side panel opens.
+
+Include:
+
+Connections
+
+Inputs
+
+Outputs
+
+State
+
+Failure cases
+
+Technology
+
+Role
+
+---
+
+# SYSTEM 01
+
+AI Receptionist
+
+Highlight:
+
+LangGraph
+
+Persistent State
+
+Hybrid RAG
+
+pgvector
+
+PostgreSQL
+
+Semantic Cache
+
+Twilio
+
+Cal.com
+
+Human Escalation
+
+Observability
+
+Conversation Memory
+
+Focus heavily on:
+
+State synchronization
+
+Tool routing
+
+Production architecture
+
+---
+
+# SYSTEM 02
+
+Geopolitical Newsletter Agent
+
+Pipeline:
+
+Search
+
+↓
+
+Score
+
+↓
+
+Extract
+
+↓
+
+Generate
+
+↓
+
+Reflect
+
+↓
+
+Publish
+
+Highlight engineering improvements:
+
+Latency
+
+95–120 seconds
+
+↓
+
+10–15 seconds
+
+P99 latency improved 6×
+
+Massive reduction in token usage
+
+Retry logic
+
+Reflection loops
+
+Validation
+
+Async pipeline
+
+---
+
+# SYSTEM 03
+
+Meeting Intelligence Platform
+
+Highlight:
+
+Whisper
+
+Structured Extraction
+
+Workflow Orchestration
+
+Persistent State
+
+Email Delivery
+
+Scalable Architecture
+
+Future extensibility
+
+Explain why structured outputs matter.
+
+---
+
+# ENGINEERING PRINCIPLES
+
+Create a dedicated chapter.
+
+Examples:
+
+Design workflows before prompts.
+
+State is a first-class citizen.
+
+Reliability beats novelty.
+
+Measure before optimizing.
+
+Systems over scripts.
+
+Deterministic logic where possible.
+
+Production before demos.
+
+Every failure is observable.
+
+Optimize only after profiling.
+
+Build for maintainability.
+
+---
+
+# BUILD LOG
+
+Looks like a premium engineering notebook.
+
+Include entries like:
+
+Reducing latency
+
+Building semantic cache
+
+State synchronization
+
+Hybrid retrieval
+
+Reflection loops
+
+Architecture redesign
+
+Production debugging
+
+Vector search improvements
+
+Prompt versioning
+
+Engineering trade-offs
+
+Each entry should include:
+
+Date
+
+Title
+
+Short lesson
+
+Technical insight
+
+---
+
+# TIMELINE
+
+March 2026
+
+Started learning modern AI Engineering.
+
+April 2026
+
+Built first autonomous workflows.
+
+May 2026
+
+Designed production agentic systems.
+
+June 2026
+
+Built Geopolitical Newsletter Agent.
+
+June 2026
+
+Built Meeting Intelligence Platform.
+
+Present
+
+Building production AI systems.
+
+Timeline should animate naturally while scrolling.
+
+---
+
+# ABOUT
+
+Minimal.
+
+No autobiography.
+
+Focus on philosophy.
+
+Explain:
+
+How you think
+
+How you build
+
+Why production quality matters
+
+---
+
+# CONTACT
+
+Minimal.
+
+Large whitespace.
+
+GitHub
+
+LinkedIn
+
+X
+
+Instagram
+
+Email
+
+GitHub
+
+https://github.com/batman00723
+
+LinkedIn
+
+https://www.linkedin.com/in/amanmishra232005/
+
+X
+
+https://x.com/batmanmishra007
+
+Instagram
+
+https://www.instagram.com/billubatman007/
+
+Email
+
+[batmanmishra23@gmail.com](mailto:batmanmishra23@gmail.com)
+
+---
+
+# CURSOR
+
+Custom magnetic cursor.
+
+Adaptive states:
+
+Button
+
+Text
+
+Architecture Node
+
+Image
+
+Link
+
+Command
+
+---
+
+# THREE.JS
+
+Use only for atmosphere.
+
+Ideas:
+
+Subtle neural network
+
+Floating particles
+
+Ambient depth
+
+Soft lighting
+
+No flashy animations.
+
+No GPU-heavy scenes.
+
+Lazy load only when needed.
+
+---
+
+# MOTION SYSTEM
+
+Animation durations:
+
+200ms
+
+350ms
+
+600ms
+
+900ms
+
+Easing:
+
+cubic-bezier(.16,1,.3,1)
+
+Hover:
+
+Scale 1.02
+
+Cards:
+
+Translate Y -4px
+
+Sections:
+
+Fade + Translate Y
+
+Portrait:
+
+Pinned
+
+Scaled
+
+Smoothly repositioned
+
+Never bounce.
+
+Never rotate.
+
+Never over-animate.
+
+Respect prefers-reduced-motion.
+
+---
+
+# SCROLL BEHAVIOR
+
+Use Lenis.
+
+Use GSAP ScrollTrigger.
+
+Pin hero.
+
+Pin architecture.
+
+Very subtle parallax only.
+
+Never parallax body text.
+
+Smooth momentum scrolling.
+
+No snapping.
+
+---
+
+# RESPONSIVE DESIGN
+
+Desktop first.
+
+Tablet optimized.
+
+Mobile polished.
+
+Architecture explorer becomes accordion.
+
+Timeline becomes vertical.
+
+Dock simplifies.
+
+Portrait scales gracefully.
+
+No horizontal scrolling.
+
+---
+
+# PERFORMANCE
+
+Target:
+
+95+ Lighthouse
+
+Lazy-load Three.js
+
+Dynamic imports
+
+Optimized images
+
+No layout shift
+
+Font preloading
+
+Tree shaking
+
+Minimal JavaScript
+
+Bundle optimized
+
+---
+
+# COMMAND PALETTE
+
+Shortcut:
+
+Ctrl + K
+
+or
+
+Cmd + K
+
+Commands:
+
+help
+
+systems
+
+architecture
+
+github
+
+contact
+
+resume
+
+timeline
+
+principles
+
+batman
+
+---
+
+# LOGO
+
+Use a minimal Batman-inspired silhouette.
+
+Modern.
+
+Simple.
+
+Geometric.
+
+Never comic-book style.
+
+---
+
+# BATMAN EASTER EGG
+
+Typing:
+
+batman
+
+Triggers:
+
+Everything fades.
+
+Theme transforms:
+
+White/Lavender
+
+↓
+
+Black/Gold
+
+Batman logo morphs.
+
+Dock updates.
+
+Soft bat silhouette flies across screen once.
+
+No popup.
+
+No notification.
+
+At the end reveal:
+
+"The cave you fear to enter holds the treasure you seek."
+
+— Joseph Campbell
+
+---
+
+# FINAL CHAPTER
+
+Full-screen ending.
+
+No footer.
+
+No buttons.
+
+Only the quote.
+
+Background:
+
+Minimal abstract cave-inspired texture.
+
+Very subtle.
+
+Quiet.
+
+Elegant.
+
+---
+
+# COPYWRITING RULES
+
+Never use:
+
+Passionate
+
+Enthusiastic
+
+Hardworking
+
+Motivated
+
+AI enthusiast
+
+Always prefer:
+
+Evidence
+
+Metrics
+
+Engineering decisions
+
+Trade-offs
+
+Systems thinking
+
+Short sentences.
+
+Maximum clarity.
+
+Minimal words.
+
+Maximum impact.
+
+---
+
+# ACCESSIBILITY
+
+Keyboard navigable.
+
+Semantic HTML.
+
+ARIA labels.
+
+Focus states.
+
+Screen reader friendly.
+
+Reduced motion support.
+
+High contrast.
+
+---
+
+# FINAL OBJECTIVE
+
+Build a portfolio that feels like the launch of a premium software product rather than a personal website.
+
+The experience should communicate that Aman Mishra is an AI Systems Engineer capable of designing, building, deploying, and operating production-grade autonomous AI systems.
+
+Every pixel, animation, interaction, transition, and line of copy must reinforce craftsmanship, engineering excellence, and founder-level systems thinking.
+
+If two design choices are equally attractive, always choose the simpler, more refined one.
+
+The website should leave visitors with a single lasting impression:
+
+**"This is someone who builds real AI systems—not demos."**
