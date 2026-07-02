@@ -324,10 +324,10 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--gray-200);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   border-radius: var(--radius-2xl);
   padding: 10px 16px;
-  box-shadow: var(--shadow-xl), 0 0 0 1px rgba(255,255,255,0.5) inset, var(--shadow-purple);
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(255,255,255,0.4) inset;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -350,6 +350,8 @@ h1, h2, h3, h4, h5, h6 {
   transition: background 0.2s var(--ease-out);
   text-decoration: none;
   color: inherit;
+  border: none;
+  background: transparent;
 }
 
 .dock-item:hover {
@@ -371,7 +373,7 @@ h1, h2, h3, h4, h5, h6 {
 .dock-divider {
   width: 1px;
   height: 32px;
-  background: var(--gray-200);
+  background: rgba(0, 0, 0, 0.06);
   margin: 0 4px;
 }
 

@@ -157,7 +157,7 @@ export default function FloatingDock({
             );
           })}
           
-          <div style={{ width: 1, height: 16, background: "var(--gray-300)", alignSelf: "center", margin: "0 6px", opacity: 0.7 }} />
+          <div style={{ width: 1, height: 16, background: "rgba(0, 0, 0, 0.06)", alignSelf: "center", margin: "0 6px" }} />
 
           <motion.button
             className={`dock-item sound-toggle`}
@@ -192,8 +192,10 @@ export default function FloatingDock({
                     bottom: "calc(100% + 10px)",
                     left: "50%",
                     transform: "translateX(-50%)",
-                    background: "var(--black)",
-                    color: "var(--white)",
+                    background: "rgba(255, 255, 255, 0.9)",
+                    color: "var(--gray-600)",
+                    border: "1px solid rgba(0, 0, 0, 0.05)",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
                     fontSize: 11,
                     fontWeight: 500,
                     padding: "4px 8px",
