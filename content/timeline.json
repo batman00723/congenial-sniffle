@@ -1,0 +1,38 @@
+[
+  {
+    "date": "March 2026",
+    "title": "Started AI Engineering",
+    "description": "Began systematic study of modern AI engineering — LLMs, embeddings, retrieval systems.",
+    "type": "milestone"
+  },
+  {
+    "date": "April 2026",
+    "title": "First Autonomous Workflows",
+    "description": "Built first multi-step agentic workflows. Learned why state management is a first-class concern.",
+    "type": "build"
+  },
+  {
+    "date": "May 2026",
+    "title": "AI Receptionist",
+    "description": "Designed and deployed production AI Receptionist with LangGraph, hybrid RAG, and persistent memory.",
+    "type": "system"
+  },
+  {
+    "date": "June 2026",
+    "title": "Geopolitical Newsletter Agent",
+    "description": "Built autonomous research pipeline. Reduced P99 latency 6× through async redesign.",
+    "type": "system"
+  },
+  {
+    "date": "June 2026",
+    "title": "Meeting Intelligence Platform",
+    "description": "Shipped structured meeting intelligence system with Whisper, Pydantic extraction, and async processing.",
+    "type": "system"
+  },
+  {
+    "date": "Present",
+    "title": "Building Production AI Systems",
+    "description": "Continuing to architect and deploy autonomous AI systems for real-world use cases.",
+    "type": "current"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "date": "Jun 2026",
+    "id": "log-001",
+    "title": "6× Latency Reduction via Async Redesign",
+    "lesson": "Sequential IO is always the bottleneck. Profile before rewriting logic.",
+    "insight": "78% of the newsletter agent's latency was IO wait from sequential API calls. Switching to asyncio with concurrent.futures brought P99 from 95-120s to 10-15s without touching any business logic.",
+    "tags": ["performance", "async", "latency"]
+  },
+  {
+    "date": "Jun 2026",
+    "id": "log-002",
+    "title": "Semantic Cache: 60% Token Reduction",
+    "lesson": "Most queries cluster. Cache at the semantic layer, not just the exact-match layer.",
+    "insight": "Analysis of 500 production queries revealed 60% were semantically equivalent to prior queries. A cosine similarity cache with threshold 0.92 eliminated the majority of redundant LLM calls.",
+    "tags": ["caching", "optimization", "cost"]
+  },
+  {
+    "date": "May 2026",
+    "id": "log-003",
+    "title": "State Synchronization in Multi-Turn Agents",
+    "lesson": "LangGraph's state checkpointing is non-negotiable for production agentic systems.",
+    "insight": "Early implementation used in-memory state that was lost on any tool failure. Migrating to LangGraph's PostgreSQL checkpointer enabled full state recovery — a 0-to-100 reliability improvement.",
+    "tags": ["state", "reliability", "LangGraph"]
+  },
+  {
+    "date": "May 2026",
+    "id": "log-004",
+    "title": "Hybrid Retrieval vs. Pure Vector Search",
+    "lesson": "Semantic similarity alone misses exact terminology. BM25 captures what embeddings don't.",
+    "insight": "Vector-only retrieval failed on business-specific acronyms and proper nouns. Adding BM25 keyword retrieval with reciprocal rank fusion improved answer relevance from 71% to 89% on evaluation set.",
+    "tags": ["RAG", "retrieval", "search"]
+  },
+  {
+    "date": "Apr 2026",
+    "id": "log-005",
+    "title": "Reflection Loops Eliminate Hallucination",
+    "lesson": "LLMs don't self-correct unless explicitly prompted to critique their own output.",
+    "insight": "Adding a structured self-evaluation step after generation — scoring factual accuracy and tone 0-10 — with a regeneration trigger at <7 reduced factual errors by 94%.",
+    "tags": ["quality", "reflection", "LLM"]
+  },
+  {
+    "date": "Apr 2026",
+    "id": "log-006",
+    "title": "Pydantic as Architecture, Not Just Validation",
+    "lesson": "Typed extraction schemas define what the system believes. They are design documents.",
+    "insight": "Switching from unstructured LLM output to Pydantic schemas eliminated all downstream parsing failures. More importantly, it forced explicit decisions about what information the system actually needed.",
+    "tags": ["architecture", "Pydantic", "structured-outputs"]
+  }
+]

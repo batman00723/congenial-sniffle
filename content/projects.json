@@ -1,0 +1,503 @@
+[
+  {
+    "id": "ai-receptionist",
+    "number": "01",
+    "name": "AI Receptionist",
+    "tagline": "Production-grade WhatsApp AI that handles dental clinic conversations end-to-end.",
+    "status": "Production",
+    "metrics": [
+      { "label": "Uptime", "value": "99.9%" },
+      { "label": "Avg Response", "value": "<2s" },
+      { "label": "Escalation Accuracy", "value": "94%" }
+    ],
+    "stack": ["LangGraph", "PostgreSQL", "pgvector", "WhatsApp API", "Cal.com", "Brevo", "Semantic Cache"],
+    "highlights": [
+      "Intent Router Agent with 6 distinct workflow paths",
+      "Hybrid RAG with semantic cache — eliminates redundant LLM calls",
+      "Full booking, rescheduling, and cancellation via Cal.com",
+      "Human escalation via Brevo API with full context handoff",
+      "Persistent conversation state in PostgreSQL across sessions"
+    ],
+    "architecture": {
+      "nodes": [
+        {
+          "id": "whatsapp",
+          "label": "WhatsApp Webhook",
+          "x": 340,
+          "y": 20,
+          "role": "User channel / ingestion",
+          "description": "Receives inbound WhatsApp messages via webhook. Extracts user query and session metadata, then forwards to the Intent Router Agent.",
+          "connections": ["intent_router"],
+          "technology": "WhatsApp Business API",
+          "inputs": ["Inbound WhatsApp message"],
+          "outputs": ["User query", "Session metadata"],
+          "failureCases": ["Webhook timeout", "Malformed payload"]
+        },
+        {
+          "id": "intent_router",
+          "label": "Intent Router Agent",
+          "x": 310,
+          "y": 120,
+          "role": "Central orchestrator",
+          "description": "Classifies user intent and routes to the correct workflow: dental FAQ → RAG, booking → Booking Workflow, emergency → Human Escalation, off-topic → graceful refusal, cancel → Cancel Workflow, reschedule → Reschedule Workflow. Reads persistent conversation state from PostgreSQL.",
+          "connections": ["pg_state", "faq_workflow", "booking_workflow", "reschedule_workflow", "cancel_workflow", "human_escalation"],
+          "technology": "LangGraph + LangChain",
+          "inputs": ["User query", "Conversation state"],
+          "outputs": ["Routed workflow trigger"],
+          "failureCases": ["Intent misclassification", "State read failure"]
+        },
+        {
+          "id": "pg_state",
+          "label": "PostgreSQL State",
+          "x": 580,
+          "y": 110,
+          "role": "Conversation memory",
+          "description": "Stores full conversation history and session state. The Intent Router reads this on every turn to maintain multi-turn context without re-sending history.",
+          "connections": [],
+          "technology": "PostgreSQL",
+          "inputs": ["Turn data", "State updates"],
+          "outputs": ["Conversation history", "Session context"],
+          "failureCases": ["DB connection error", "State corruption"]
+        },
+        {
+          "id": "faq_workflow",
+          "label": "FAQ Workflow",
+          "x": 30,
+          "y": 280,
+          "role": "Knowledge retrieval",
+          "description": "Ingests PDF/DOCX knowledge base: parses → chunks → embeds. On query: checks Semantic Cache first (hit = instant response). On miss: Hybrid RAG (vector + keyword search) → LLM → response → cache write.",
+          "connections": ["pg_patients"],
+          "technology": "pgvector + BM25 + Semantic Cache",
+          "inputs": ["Dental FAQ query"],
+          "outputs": ["Grounded answer"],
+          "failureCases": ["Empty retrieval", "Cache staleness"]
+        },
+        {
+          "id": "booking_workflow",
+          "label": "Booking Workflow",
+          "x": 230,
+          "y": 280,
+          "role": "Appointment booking",
+          "description": "Booking Agent collects date, time, and service. Validation node checks for missing fields and asks follow-up questions. Once complete, checks Cal.com availability and books the slot. Emails supervisor via Brevo if API is down.",
+          "connections": ["cal_booking", "pg_patients"],
+          "technology": "LangGraph + Cal.com API + Brevo",
+          "inputs": ["Booking intent", "Patient preferences"],
+          "outputs": ["Confirmed booking", "Calendar entry"],
+          "failureCases": ["Slot unavailable", "Cal.com API down"]
+        },
+        {
+          "id": "reschedule_workflow",
+          "label": "Reschedule Workflow",
+          "x": 430,
+          "y": 280,
+          "role": "Appointment rescheduling",
+          "description": "Retrieves existing booking from conversation state. Collects new date/time preferences. Validates, checks availability, and updates the Cal.com slot. Mirrors Booking Agent logic with reschedule-specific state transitions.",
+          "connections": ["cal_reschedule", "pg_patients"],
+          "technology": "LangGraph + Cal.com API",
+          "inputs": ["Reschedule intent", "New time preferences"],
+          "outputs": ["Updated booking"],
+          "failureCases": ["No existing booking found", "Slot conflict"]
+        },
+        {
+          "id": "cancel_workflow",
+          "label": "Cancellation Workflow",
+          "x": 620,
+          "y": 280,
+          "role": "Appointment cancellation",
+          "description": "Retrieves active appointment from conversation state. Sends cancellation request to Cal.com via Python. If Cal.com API is down, emails supervisor for manual cancellation. Updates patient record in PostgreSQL.",
+          "connections": ["pg_patients"],
+          "technology": "Cal.com API + Brevo",
+          "inputs": ["Cancellation intent"],
+          "outputs": ["Cancellation confirmation"],
+          "failureCases": ["No active booking", "API unavailable"]
+        },
+        {
+          "id": "human_escalation",
+          "label": "Human Escalation",
+          "x": 820,
+          "y": 280,
+          "role": "Graceful emergency handoff",
+          "description": "Triggered on emergency conditions or off-topic queries that can't be handled gracefully. Passes full conversation context to a human agent via Brevo API. Ensures no context loss during handoff.",
+          "connections": [],
+          "technology": "Brevo API",
+          "inputs": ["Escalation trigger", "Full conversation context"],
+          "outputs": ["Human agent handoff"],
+          "failureCases": ["Brevo API down", "Agent unavailable"]
+        },
+        {
+          "id": "cal_booking",
+          "label": "Cal.com API",
+          "x": 230,
+          "y": 430,
+          "role": "Calendar booking",
+          "description": "Checks slot availability and creates calendar bookings. Returns booking confirmation details which are relayed back to the patient via WhatsApp.",
+          "connections": ["pg_patients"],
+          "technology": "Cal.com REST API",
+          "inputs": ["Date", "Time", "Service type"],
+          "outputs": ["Booking confirmation"],
+          "failureCases": ["Rate limit", "Slot taken"]
+        },
+        {
+          "id": "cal_reschedule",
+          "label": "Cal.com API",
+          "x": 430,
+          "y": 430,
+          "role": "Calendar rescheduling",
+          "description": "Updates existing bookings with new date/time. Cancels old slot and creates new one atomically.",
+          "connections": ["pg_patients"],
+          "technology": "Cal.com REST API",
+          "inputs": ["Existing booking ID", "New slot"],
+          "outputs": ["Updated booking"],
+          "failureCases": ["Booking not found", "New slot conflict"]
+        },
+        {
+          "id": "pg_patients",
+          "label": "PostgreSQL (Patients, Appointments)",
+          "x": 490,
+          "y": 500,
+          "role": "Persistent data store",
+          "description": "Central database storing patient records and all appointment data. Every workflow writes back here — bookings, reschedules, cancellations all update the patient record.",
+          "connections": [],
+          "technology": "PostgreSQL",
+          "inputs": ["Patient data", "Appointment records"],
+          "outputs": ["Stored records"],
+          "failureCases": ["Write failure", "Constraint violation"]
+        }
+      ]
+    },
+    "engineeringDecisions": [
+      { "decision": "LangGraph for workflow orchestration", "rationale": "Six distinct intent paths needed explicit state machine control. Unstructured agents loop unpredictably in production — LangGraph gives deterministic routing with full state persistence." },
+      { "decision": "Semantic Cache before RAG", "rationale": "Dental FAQs cluster tightly — patients ask the same questions repeatedly. A cosine similarity cache with threshold 0.92 eliminates the majority of redundant LLM calls before they hit the vector store." },
+      { "decision": "Hybrid RAG (vector + keyword)", "rationale": "Dental terminology like procedure names and medical codes fail pure semantic search. BM25 keyword retrieval captures exact matches that embeddings miss." },
+      { "decision": "Brevo for escalation fallback", "rationale": "When Cal.com is down, the system doesn't fail silently — it emails the supervisor immediately so no booking request is lost." }
+    ],
+    "challenges": [
+      { "title": "Multi-turn state across 6 workflows", "description": "Each workflow needed isolated state but shared conversation history. LangGraph's checkpointer with PostgreSQL backend solved state isolation without losing cross-turn context." },
+      { "title": "Cal.com API downtime handling", "description": "Production requires graceful degradation. Added Brevo email fallback so any booking/cancellation request that can't be processed automatically gets escalated to a human immediately." }
+    ]
+  },
+  {
+    "id": "geopolitical-newsletter",
+    "number": "02",
+    "name": "Geopolitical Newsletter Agent",
+    "tagline": "Autonomous research pipeline. From 15 articles to a validated, published newsletter in 15 seconds.",
+    "status": "Production",
+    "metrics": [
+      { "label": "Latency Reduction", "value": "6×" },
+      { "label": "P99 Latency", "value": "15s" },
+      { "label": "Token Savings", "value": "73%" }
+    ],
+    "stack": ["Python", "LangGraph", "Tavily", "Trafilatura", "Groq", "Jinja2", "Django", "PostgreSQL"],
+    "highlights": [
+      "Tavily pulls up to 15 articles from last 24 hours",
+      "LLM scores articles 1-10, selects top 6 by relevance",
+      "Trafilatura extracts clean, ad-free article text from HTML",
+      "Reflection node validates newsletter against source articles",
+      "Max 2 retry loops before force-publish — no infinite loops"
+    ],
+    "pipeline": [
+      { "step": "Search", "description": "Tavily pulls up to 15 geopolitical articles from the last 24 hours", "duration": "2-3s" },
+      { "step": "Score", "description": "LLM Score Node: rates articles 1-10 on specified factors, returns top 6 links", "duration": "1-2s" },
+      { "step": "Extract", "description": "Trafilatura: extracts main article content from HTML — clean, ad-free text", "duration": "1s" },
+      { "step": "Generate", "description": "LLM Newsletter Generator Node using Jinja2 HTML template", "duration": "4-6s" },
+      { "step": "Reflect", "description": "LLM Reflection Node: validates newsletter accuracy against extracted source text", "duration": "2-3s" },
+      { "step": "Route", "description": "should_continue(): publish if score ≥ threshold OR retry ≥ 2, else revise", "duration": "0.1s" },
+      { "step": "Publish", "description": "Django EmailMessage sends newsletter to Recipients List (DB) as background task", "duration": "0.5s" }
+    ],
+    "architecture": {
+      "nodes": [
+        {
+          "id": "tavily",
+          "label": "Tavily Search",
+          "x": 340,
+          "y": 20,
+          "role": "Web research",
+          "description": "Pulls up to 15 geopolitical news articles from the last 24 hours. Returns article URLs, titles, and snippets for scoring.",
+          "connections": ["llm_score"],
+          "technology": "Tavily Search API",
+          "inputs": ["Search query topics"],
+          "outputs": ["Up to 15 article URLs + snippets"],
+          "failureCases": ["API rate limit", "No results for query"]
+        },
+        {
+          "id": "llm_score",
+          "label": "LLM Score Node",
+          "x": 310,
+          "y": 140,
+          "role": "Relevance filtering",
+          "description": "LLM scores each article 1-10 based on specified factors (recency, geopolitical relevance, source authority). Returns the top 6 links for extraction. Eliminates noise before expensive extraction.",
+          "connections": ["trafilatura"],
+          "technology": "LLM via Groq",
+          "inputs": ["15 article URLs + snippets"],
+          "outputs": ["Top 6 ranked article links"],
+          "failureCases": ["All articles below threshold", "LLM timeout"]
+        },
+        {
+          "id": "trafilatura",
+          "label": "Trafilatura Extractor",
+          "x": 310,
+          "y": 260,
+          "role": "HTML content extraction",
+          "description": "Fetches each of the top 6 article URLs and extracts clean, ad-free main content from HTML. Trafilatura outperforms BeautifulSoup for news articles by stripping navigation, ads, and boilerplate.",
+          "connections": ["llm_generator"],
+          "technology": "Trafilatura",
+          "inputs": ["Top 6 article URLs"],
+          "outputs": ["Clean article text (6 articles)"],
+          "failureCases": ["Paywalled content", "Extraction failure"]
+        },
+        {
+          "id": "jinja2",
+          "label": "Jinja2 HTML Template",
+          "x": 600,
+          "y": 340,
+          "role": "Email template",
+          "description": "Pre-built HTML newsletter template injected by the generator node. Ensures consistent formatting, branding, and structure across every edition.",
+          "connections": ["llm_generator"],
+          "technology": "Jinja2",
+          "inputs": ["Template variables"],
+          "outputs": ["Formatted HTML structure"],
+          "failureCases": ["Template render error"]
+        },
+        {
+          "id": "llm_generator",
+          "label": "LLM Newsletter Generator",
+          "x": 310,
+          "y": 380,
+          "role": "Content generation",
+          "description": "Generates the newsletter from clean article text using the Jinja2 HTML template. Produces structured sections: headlines, analysis, and key takeaways.",
+          "connections": ["llm_reflection"],
+          "technology": "LLM via Groq + Jinja2",
+          "inputs": ["Clean article text", "HTML template"],
+          "outputs": ["Draft newsletter"],
+          "failureCases": ["LLM refusal", "Template injection error"]
+        },
+        {
+          "id": "llm_reflection",
+          "label": "LLM Reflection Node",
+          "x": 310,
+          "y": 490,
+          "role": "Quality validation",
+          "description": "Validates the generated newsletter against the original extracted article text. Checks for hallucinations, factual accuracy, and tone consistency. Returns a quality verdict.",
+          "connections": ["router"],
+          "technology": "LLM via Groq",
+          "inputs": ["Draft newsletter", "Source article text"],
+          "outputs": ["Quality verdict: publish / revise"],
+          "failureCases": ["Inconsistent scoring"]
+        },
+        {
+          "id": "router",
+          "label": "Router: should_continue()",
+          "x": 290,
+          "y": 600,
+          "role": "Conditional routing",
+          "description": "Deterministic router: if status == 'publish' OR iter ≥ 2 → send to publisher (end). If status == 'revise' AND iter < 2 → loop back to generator. Hard cap at 2 retries prevents infinite loops.",
+          "connections": ["llm_generator", "publisher"],
+          "technology": "LangGraph conditional edge",
+          "inputs": ["Quality verdict", "Iteration count"],
+          "outputs": ["Route: 'revise' or 'end/publish'"],
+          "failureCases": ["State read failure"]
+        },
+        {
+          "id": "recipients_db",
+          "label": "Recipients List (DB)",
+          "x": 620,
+          "y": 650,
+          "role": "Subscriber store",
+          "description": "PostgreSQL table storing all newsletter subscribers. The publisher queries this to build the recipient list for each edition.",
+          "connections": ["publisher"],
+          "technology": "PostgreSQL",
+          "inputs": ["Subscriber registration"],
+          "outputs": ["Recipient email list"],
+          "failureCases": ["Empty list", "DB connection error"]
+        },
+        {
+          "id": "publisher",
+          "label": "Django EmailMessage",
+          "x": 310,
+          "y": 720,
+          "role": "Email delivery",
+          "description": "Sends the approved newsletter as a formatted HTML email to all recipients fetched from the DB. Runs as a Django background task to avoid blocking the main pipeline.",
+          "connections": [],
+          "technology": "Django EmailMessage (background task)",
+          "inputs": ["Approved newsletter HTML", "Recipient list"],
+          "outputs": ["Delivered emails"],
+          "failureCases": ["SMTP failure", "Delivery bounce"]
+        }
+      ]
+    },
+    "engineeringDecisions": [
+      { "decision": "LLM scoring before extraction", "rationale": "Trafilatura extraction is expensive per URL. Scoring first with just snippets filters 15 articles to 6 before any full fetch — 60% reduction in extraction cost with negligible scoring overhead." },
+      { "decision": "Trafilatura over BeautifulSoup", "rationale": "BeautifulSoup extracts everything including ads and nav. Trafilatura is purpose-built for news article extraction and produces significantly cleaner text, which directly improves generation quality." },
+      { "decision": "Hard retry cap at iter=2", "rationale": "Reflection loops without a cap create infinite revision cycles in production. A hard cap of 2 retries ensures the pipeline always terminates, accepting slightly lower quality over system failure." },
+      { "decision": "Django background task for delivery", "rationale": "Email delivery blocks the main pipeline thread for multiple seconds. Running as a Django background task allows the pipeline to return immediately while delivery happens async." }
+    ],
+    "challenges": [
+      { "title": "Paywalled article content", "description": "Trafilatura returns empty on paywalled URLs. Added a content validation step after extraction that removes empty articles from the set before generation, preventing hallucination from missing context." },
+      { "title": "Reflection loop quality threshold", "description": "Calibrating the quality threshold for the reflection node required testing across 50+ editions. Too strict caused near-infinite revisions; too lenient allowed low-quality output through." }
+    ]
+  },
+  {
+    "id": "meeting-intelligence",
+    "number": "03",
+    "name": "Meeting Intelligence Platform",
+    "tagline": "Drop a Zoom recording. Get a structured intelligence report — decisions, actions, risks — in your inbox.",
+    "status": "Built",
+    "metrics": [
+      { "label": "Transcription Accuracy", "value": "96%" },
+      { "label": "Processing Time", "value": "<90s" },
+      { "label": "Model", "value": "Qwen3-32B" }
+    ],
+    "stack": ["Whisper large v3", "Groq", "Qwen3-32B", "LangGraph", "Supabase", "PostgreSQL", "Django", "watchdog"],
+    "highlights": [
+      "Two ingestion paths: API upload (prod) and Zoom watchdog (local dev)",
+      "Whisper large v3 via Groq for high-accuracy transcription",
+      "LangGraph workflow: Report Generation → Persist → Deliver",
+      "Qwen3-32B generates structured intelligence report",
+      "Recipients fetched from Supabase, emailed BCC for privacy"
+    ],
+    "architecture": {
+      "nodes": [
+        {
+          "id": "api_upload",
+          "label": "Audio Upload API",
+          "x": 120,
+          "y": 30,
+          "role": "Production ingestion",
+          "description": "Production path: accepts audio file upload via API (e.g. USD-prefixed filename). Passes file path to the process_audio() function which handles transcription.",
+          "connections": ["process_audio"],
+          "technology": "FastAPI / Django",
+          "inputs": ["Audio file (USD-prefixed filename)"],
+          "outputs": ["file_path"],
+          "failureCases": ["Unsupported format", "Upload timeout"]
+        },
+        {
+          "id": "zoom_watchdog",
+          "label": "Zoom Watchdog",
+          "x": 560,
+          "y": 30,
+          "role": "Local dev ingestion",
+          "description": "Local dev path: Python watchdog monitors a directory for new Zoom recordings. When a new file appears, it automatically triggers the pipeline — no manual upload needed.",
+          "connections": ["zoom_audio"],
+          "technology": "Python watchdog",
+          "inputs": ["Zoom recording file"],
+          "outputs": ["file_path"],
+          "failureCases": ["Directory permission error", "Watchdog crash"]
+        },
+        {
+          "id": "process_audio",
+          "label": "process_audio()",
+          "x": 120,
+          "y": 150,
+          "role": "Prod transcription pipeline",
+          "description": "Production transcription function. Takes file_path, runs Whisper large v3 via Groq for speech-to-text. Audio file is deleted after transcription to avoid storage accumulation.",
+          "connections": ["langgraph_workflow"],
+          "technology": "Whisper large v3 via Groq",
+          "inputs": ["file_path"],
+          "outputs": ["Transcript (text)"],
+          "failureCases": ["Low audio quality", "Groq API timeout"]
+        },
+        {
+          "id": "zoom_audio",
+          "label": "Audio → Speech-to-text",
+          "x": 560,
+          "y": 150,
+          "role": "Local dev transcription",
+          "description": "Local dev transcription path. Same Whisper large v3 via Groq model as production. Produces identical transcript format so both paths feed seamlessly into the same LangGraph workflow.",
+          "connections": ["langgraph_workflow"],
+          "technology": "Whisper large v3 via Groq",
+          "inputs": ["Zoom audio file"],
+          "outputs": ["Transcript (text)"],
+          "failureCases": ["Audio quality too low", "File format unsupported"]
+        },
+        {
+          "id": "langgraph_workflow",
+          "label": "LangGraph Workflow",
+          "x": 290,
+          "y": 300,
+          "role": "Orchestration layer",
+          "description": "process_transcript() entry point. Orchestrates the three-node LangGraph workflow: Report Generation → Persist Meeting Report → Report Delivery. Both ingestion paths converge here.",
+          "connections": ["report_gen"],
+          "technology": "LangGraph",
+          "inputs": ["Transcript (text)"],
+          "outputs": ["Workflow execution"],
+          "failureCases": ["State corruption", "Node failure"]
+        },
+        {
+          "id": "report_gen",
+          "label": "Report Generation Node",
+          "x": 290,
+          "y": 400,
+          "role": "Intelligence extraction",
+          "description": "Qwen3-32B via Groq generates a structured intelligence report from the full transcript. Extracts decisions, action items, owners, deadlines, risks, blockers, and meeting summary.",
+          "connections": ["persist"],
+          "technology": "Qwen3-32B via Groq",
+          "inputs": ["Meeting transcript"],
+          "outputs": ["Structured intelligence report"],
+          "failureCases": ["Context window exceeded", "LLM refusal"]
+        },
+        {
+          "id": "persist",
+          "label": "Persist Meeting Report",
+          "x": 290,
+          "y": 490,
+          "role": "Data persistence",
+          "description": "Saves both the raw transcription and the generated intelligence report to PostgreSQL (Supabase). Enables historical lookup and future search over past meetings.",
+          "connections": ["supabase", "report_delivery"],
+          "technology": "Supabase (PostgreSQL)",
+          "inputs": ["Raw transcript", "Intelligence report"],
+          "outputs": ["Persisted records"],
+          "failureCases": ["Write failure", "Supabase connection error"]
+        },
+        {
+          "id": "recipient_api",
+          "label": "Recipient Registration API",
+          "x": 600,
+          "y": 490,
+          "role": "Subscriber management",
+          "description": "API for registering meeting report recipients. Writes email addresses to the PostgreSQL Recipients table in Supabase.",
+          "connections": ["supabase"],
+          "technology": "FastAPI / Django",
+          "inputs": ["Recipient email"],
+          "outputs": ["Registered recipient"],
+          "failureCases": ["Duplicate email", "DB write failure"]
+        },
+        {
+          "id": "supabase",
+          "label": "PostgreSQL (Supabase)",
+          "x": 530,
+          "y": 590,
+          "role": "Database",
+          "description": "Supabase-hosted PostgreSQL. Stores raw transcripts, intelligence reports, and the recipients list. The delivery node fetches recipients from here.",
+          "connections": ["report_delivery"],
+          "technology": "Supabase",
+          "inputs": ["Reports", "Transcripts", "Recipients"],
+          "outputs": ["Stored data", "Recipient list"],
+          "failureCases": ["Connection failure", "Row limit"]
+        },
+        {
+          "id": "report_delivery",
+          "label": "Report Delivery (Email)",
+          "x": 290,
+          "y": 620,
+          "role": "Email distribution",
+          "description": "Fetches recipients from Supabase and sends the intelligence report via email. Uses BCC for privacy so recipients don't see each other's addresses.",
+          "connections": [],
+          "technology": "Django EmailMessage",
+          "inputs": ["Intelligence report", "Recipient list (BCC)"],
+          "outputs": ["Delivered email reports"],
+          "failureCases": ["SMTP failure", "Empty recipient list"]
+        }
+      ]
+    },
+    "engineeringDecisions": [
+      { "decision": "Whisper large v3 via Groq", "rationale": "Groq's hardware acceleration runs Whisper large v3 significantly faster than OpenAI's API while maintaining the same accuracy. Transcription of a 60-min meeting completes in under 30s." },
+      { "decision": "Qwen3-32B for report generation", "rationale": "Qwen3-32B outperforms smaller models on long-context structured extraction tasks. Meeting transcripts can be 10,000+ tokens — model quality at this context length matters more than speed." },
+      { "decision": "Dual ingestion paths", "rationale": "Production needs a clean API endpoint; local development needs zero friction. The watchdog path enables rapid testing without building upload tooling. Both paths produce identical transcript format." },
+      { "decision": "BCC delivery for privacy", "rationale": "Meeting participants shouldn't see who else received the report. BCC ensures each recipient gets a private copy without exposing the full distribution list." }
+    ],
+    "challenges": [
+      { "title": "Variable Zoom audio quality", "description": "Zoom recordings vary wildly in quality based on network conditions. Added a pre-transcription quality check — files below a SNR threshold get flagged for manual review rather than producing garbage transcripts." },
+      { "title": "Long transcript context", "description": "Hour-long meetings produce 10,000+ token transcripts. Tested multiple models — Qwen3-32B was the only model that consistently extracted all 12+ fields correctly without hallucinating on long contexts." }
+    ]
+  }
+]

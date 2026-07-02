@@ -1,0 +1,42 @@
+[
+  {
+    "number": "01",
+    "title": "Design workflows before prompts.",
+    "description": "A well-designed workflow makes the prompt almost trivial. Prompts without architecture are just hoping the LLM figures it out."
+  },
+  {
+    "number": "02",
+    "title": "State is a first-class citizen.",
+    "description": "Every agentic system lives or dies by how it manages state. Treat it as seriously as your database schema."
+  },
+  {
+    "number": "03",
+    "title": "Reliability beats novelty.",
+    "description": "A system that works 99.9% of the time is worth infinitely more than one that works 80% of the time with impressive benchmarks."
+  },
+  {
+    "number": "04",
+    "title": "Measure before optimizing.",
+    "description": "Every performance decision must be backed by profiling data. Intuition is a starting point, not a conclusion."
+  },
+  {
+    "number": "05",
+    "title": "Systems over scripts.",
+    "description": "Scripts solve today's problem. Systems solve a class of problems. Build for the architecture you'll need in 6 months."
+  },
+  {
+    "number": "06",
+    "title": "Every failure is observable.",
+    "description": "If you can't see it fail, you can't fix it. Instrument everything before it goes to production."
+  },
+  {
+    "number": "07",
+    "title": "Deterministic logic where possible.",
+    "description": "Use LLMs for reasoning and creativity. Use deterministic code for routing, validation, and state transitions."
+  },
+  {
+    "number": "08",
+    "title": "Build for maintainability.",
+    "description": "Code you write today is infrastructure someone has to operate tomorrow. Write for the engineer who inherits it."
+  }
+]

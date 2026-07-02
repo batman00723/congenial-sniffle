@@ -1,0 +1,15 @@
+{
+  "name": "Aman Mishra",
+  "title": "AI Systems Engineer",
+  "mission": "Engineering Autonomous Intelligence for the Real World.",
+  "philosophy": [
+    "I don't build AI demos. I build systems that operate under real constraints — latency budgets, failure modes, state management, and observability requirements.",
+    "Every architecture decision I make is grounded in production reality: what happens when the LLM times out, when the vector search returns empty, when state gets corrupted mid-conversation.",
+    "I think in systems. Not in models."
+  ],
+  "approach": [
+    { "label": "How I think", "text": "From constraints backward to architecture. Never from technology forward to use case." },
+    { "label": "How I build", "text": "Instrument first. Optimize after. Reliability is a feature, not an afterthought." },
+    { "label": "Why production quality matters", "text": "A demo that works once is interesting. A system that works ten thousand times is engineering." }
+  ]
+}
