@@ -79,45 +79,22 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                 exit={{ opacity: 0, scale: 0.5, rotate: 90 }}
                 transition={{ duration: 0.3 }}
-                style={{ position: "absolute" }}
+                style={{ 
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
               >
                 {["⬡", "◈", "◉", "◎", "●"][Math.min(step, 4)]}
               </motion.span>
             </AnimatePresence>
           </motion.div>
 
-          {/* Status text */}
-          <div className="relative h-5 mb-6" style={{ minWidth: 220, position: "relative", zIndex: 1 }}>
-            <AnimatePresence mode="popLayout">
-              <motion.p
-                key={step}
-                className="absolute inset-0 flex justify-center items-center"
-                style={{
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: "var(--gray-500)",
-                  letterSpacing: "0.02em",
-                  fontFamily: "var(--font-mono)",
-                }}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {SEQUENCE[Math.min(step, SEQUENCE.length - 1)]}
-              </motion.p>
-            </AnimatePresence>
-          </div>
 
-          {/* Progress bar */}
-          <div className="loading-bar" style={{ position: "relative", zIndex: 1 }}>
-            <motion.div
-              className="loading-bar-fill"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: progress / 100 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </div>
+
+
         </motion.div>
       )}
     </AnimatePresence>

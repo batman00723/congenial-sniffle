@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Bot, User, Loader2 } from "lucide-react";
+import { X, Send, Bot, User, Loader2, RefreshCw } from "lucide-react";
 
 interface Message {
   role: "user" | "bot";
@@ -101,23 +101,46 @@ export default function Chatbot({ isOpen, onClose }: ChatbotProps) {
               />
               <h3 style={{ margin: 0, fontSize: "15px", fontWeight: 600 }}>Resume AI</h3>
             </div>
-            <button
-              onClick={onClose}
-              style={{
-                background: "none",
-                border: "none",
-                color: "var(--black)",
-                cursor: "pointer",
-                padding: "4px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "4px",
-              }}
-              className="hover:bg-gray-500/10"
-            >
-              <X size={18} />
-            </button>
+            <div style={{ display: "flex", gap: "4px" }}>
+              <button
+                onClick={() => setMessages([{ role: "bot", content: "Hello! I'm Alfred, Aman's Buttler. Do you have any questions regarding Aman?" }])}
+                title="Start New Chat"
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "var(--gray-500)",
+                  cursor: "pointer",
+                  padding: "6px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "4px",
+                  transition: "color 0.2s, background 0.2s"
+                }}
+                className="hover:bg-gray-100 hover:text-black"
+              >
+                <RefreshCw size={16} />
+              </button>
+              <button
+                onClick={onClose}
+                title="Close"
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "var(--gray-500)",
+                  cursor: "pointer",
+                  padding: "6px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "4px",
+                  transition: "color 0.2s, background 0.2s"
+                }}
+                className="hover:bg-gray-100 hover:text-black"
+              >
+                <X size={18} />
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
